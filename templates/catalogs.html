@@ -1,0 +1,101 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+
+
+<div class="container">
+<div class="page-header">
+  <h1>Catalog App</h1>
+	</div>
+   <p>Resize the browser window to see the effect.</p>
+   <p>The columns will automatically stack on top of each other when the screen is less than 768px wide.</p>
+
+  <div class="row">
+    <div class="col-sm-4">
+     <h2>Categories</h2>
+     	<a href='{{url_for('newCatalog') }}'>Add New Catalog</a>
+				{% for catalog in catalogs %}
+					<a href = "{{url_for('showItem', catalog_id = catalog.id)}}">
+						<div class="row">
+								<div class="col-md-10 catalog-list">
+									<p>{{catalog.name}}</p>
+								</div>
+						</div>
+					</a>
+				{% endfor %}
+			</div>
+
+			<h2>Latest Items</h2>
+			{% for i in items %}
+
+					   <p>{{i.name}} <i>({{i.catalog.name}})</i></p>
+
+			{% endfor %}
+		      </div>
+  </div>
+</div>
+
+</div>
+<footer class="container-fluid">
+  <p>Footer Text</p>
+</footer>
+</body>
+</html>
+
+
+
+
+	<div class="row top-menu">
+		<div class="col-md-10"></div>
+		<div class="col-md-2 text-right">
+					</div>
+	</div>
+	<div class="row divider blue">
+		<div class="col-md-12"></div>
+	</div>
+	<div class="row banner main">
+		<div class="col-md-1"></div>
+		<div class="col-md-11 padding-none">
+			<h1>Catalogs</h1>
+		</div>
+	</div>
+
+<div class = 'flash'>
+		      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+</div>
+
+	<div class="row padding-top padding-bottom">
+		<div class="col-md-1"></div>
+		<div class="col-md-10 padding-none">
+			<a href="{{url_for('newCatalog')}}">
+				<button class="btn btn-default" id="new-catalog">
+					<span class="glyphicon glyphicon-star" aria-hidden="true"></span>Add Catalog
+				</button>
+			</a>
+
+		</div>
+		<div class="col-md-1"></div>
+	</div>
+	{% for catalog in catalogs %}
+		<a href = "{{url_for('showItem', catalog_id = catalog.id)}}">
+			<div class="row">
+				<div class="col-md-1"></div>
+					<div class="col-md-10 catalog-list">
+						<h3>{{catalog.name}}</h3>
+					</div>
+				<div class="col-md-1"></div>
+			</div>
+		</a>
+	{% endfor %}
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+
+		<div class="container">
+		<div class="page-header">
+		  <h1>Catalog App</h1>
+			</div>
+		   <p>Resize the browser window to see the effect.</p>
+		   <p>The columns will automatically stack on top of each other when the screen is less than 768px wide.</p>
+
+		  <div class="row">
+		    <div class="col-sm-4">
+		     <h2>Categories</h2>
+				 	<a href='{{url_for('newCatalog') }}'>Add New Catalog</a> 
+						{% for catalog in catalogs %}
+							<a href = "{{url_for('showItem', catalog_id = catalog.id)}}">
+										<div class="col-md-10 catalog-list">
+											<p>{{catalog.name}}</p>
+										</div>
+							</a>
+						{% endfor %}
+					</div>
+
+
+					<h2>{{catalog.name}} items ({{numOfItems}})</h2>
+					<a href='{{url_for('newSportItem', catalog_id = catalog.id) }}'>Add New {{catalog.name}} item</a>
+					  {% for i in items %}
+						<a href = "{{url_for('showSportItem', catalog_id=catalog.id, sport_id=i.id)}}">
+
+						   <div class="col-sm-8 catalog-list">
+							   <p>{{i.name}} </p>
+
+							 </div>
+							</a>
+					  {% endfor %}
+		</div>
+ </div>
+
+
+		<footer class="container-fluid">
+		  <p>Footer Text</p>
+		</footer>
+
+		</body>
+
+
+
+		<div class = 'flash'>
+				      {% with messages = get_flashed_messages() %}
+		      {% if messages %}
+
+		        <ul>
+		        {% for message in messages %}
+		            <li> <strong> {{ message }} </strong> </li>
+		        {% endfor %}
+		        </ul>
+		        {% endif %}
+		    {% endwith %}
+
+
+
+
+
+
+
+
+<!-- </div>
+	<div class="row padding-top padding-bottom">
+		<div class="col-md-1"></div>
+		<div class="col-md-11 padding-none">
+			<a href="{{url_for('editCatalog', catalog_id = catalog.id )}}">
+				<button class="btn btn-default" id="new-menu-item">
+					<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>Edit catalog
+				</button>
+			</a>
+			<a href="{{url_for('newSportItem', catalog_id = catalog.id )}}">
+				<button class="btn btn-default" id="new-menu-item">
+					<span class="glyphicon glyphicon-star" aria-hidden="true"></span>Add Sport Item
+				</button>
+			</a>
+						<a href="{{url_for('deleteCatalog', catalog_id = catalog.id )}}">
+				<button class="btn btn-default delete" id="delete-catalog">
+					<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>Delete catalog
+				</button>
+			</a>
+		</div>
+		<div class="col-md-7"></div>
+	</div>
+
+	{% if items !=[] %}
+		<div class="row">
+			<div class="col-md-1"></div>
+			<div class="col-md-3">
+					{% for i in items %}
+							<div class="sport-item">
+								<h3>{{i.name}}</h3>
+								<p>{{i.description}}</p>
+								<a href='{{url_for('editSportItem', catalog_id = catalog.id, sport_id=i.id ) }}'>Edit</a> |
+								<a href='{{url_for('deleteSportItem', catalog_id = catalog.id, sport_id=i.id ) }}'>Delete</a>
+							</div>
+
+					{% endfor %}
+			</div>
+
+			<div class="col-md-1"></div>
+		</div>
+	{% endif %}
+{% endblock %} -->

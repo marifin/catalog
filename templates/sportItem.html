@@ -1,0 +1,24 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+
+{% if items !=[] %}
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-3">
+
+            <div class="sport-item">
+              <h3>{{item.name}}</h3>
+              <p>{{item.description}}</p>
+              <a href='{{url_for('editSportItem', catalog_id = catalog.id, sport_id=sport_id ) }}'>Edit</a> |
+              <a href='{{url_for('deleteSportItem', catalog_id = catalog.id, sport_id=sport_id ) }}'>Delete</a>
+            </div>
+    </div>
+
+    <div class="col-md-1"></div>
+  </div>
+{% endif %}
+
+
+{% endblock %}
