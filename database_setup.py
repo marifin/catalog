@@ -7,7 +7,6 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'user'
-
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     email = Column(String(250), nullable=False)
@@ -16,7 +15,6 @@ class User(Base):
 
 class Catalog(Base):
     __tablename__ = 'catalog'
-
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     user_id = Column(Integer,ForeignKey('user.id'))
@@ -33,15 +31,13 @@ class Catalog(Base):
 class SportItem(Base):
     __tablename__ = 'sport_item'
 
-
-    name =Column(String(80), nullable = False)
+    name = Column(String(80), nullable = False)
     id = Column(Integer, primary_key = True)
     description = Column(String(250))
     price = Column(String(8))
-    #course = Column(String(250))
-    catalog_id = Column(Integer,ForeignKey('catalog.id'))
     catalog = relationship(Catalog)
-    user_id = Column(Integer,ForeignKey('user.id'))
+    catalog_id = Column(Integer, ForeignKey('catalog.id'))
+    user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
 
@@ -51,14 +47,11 @@ class SportItem(Base):
        return {
            'name'         : self.name,
            'description'         : self.description,
-           'id'         : self.id,
-           'price'         : self.price,
-         #  'course'         : self.course,
+           'id'         : self.id
+
        }
 
 
 
 engine = create_engine('sqlite:///itemcatalog.db')
-
-
 Base.metadata.create_all(engine)
