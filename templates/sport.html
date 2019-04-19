@@ -4,16 +4,14 @@
 
 
 		<div class="container">
-		<div class="page-header">
-		  <h1>Catalog App</h1>
-			</div>
-		   <p>Resize the browser window to see the effect.</p>
+
+		   <p>Click on a category to see the items for it. Resize the browser window to see the effect.</p>
 		   <p>The columns will automatically stack on top of each other when the screen is less than 768px wide.</p>
 
 		  <div class="row">
 		    <div class="col-sm-4">
 		     <h2>Categories</h2>
-				 	<a href='{{url_for('newCatalog') }}'>Add New Catalog</a> 
+				 	<a href='{{url_for('newCatalog') }}'>Add New Catalog</a>
 						{% for catalog in catalogs %}
 							<a href = "{{url_for('showItem', catalog_id = catalog.id)}}">
 										<div class="col-md-10 catalog-list">
@@ -48,18 +46,18 @@
 
 
 		<div class = 'flash'>
-				      {% with messages = get_flashed_messages() %}
+				  {% with messages = get_flashed_messages() %}
 		      {% if messages %}
-
 		        <ul>
 		        {% for message in messages %}
 		            <li> <strong> {{ message }} </strong> </li>
 		        {% endfor %}
 		        </ul>
-		        {% endif %}
+		      {% endif %}
 		    {% endwith %}
 
-
+</div>
+	{% endblock %}
 
 
 
@@ -107,4 +105,4 @@
 			<div class="col-md-1"></div>
 		</div>
 	{% endif %}
-{% endblock %} -->
+-->
