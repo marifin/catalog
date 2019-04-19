@@ -118,7 +118,6 @@ def gconnect():
     login_session['user_id'] = user_id
 
     print getUserID(data["email"])
-
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -146,9 +145,17 @@ def gdisconnect():
     print result
 
     if result['status'] == '200':
-        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        del login_session['access_token']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        del login_session['user_id']
+
+        response = make_response(json.dumps('Logged out successfully.'), 200)
         response.headers['Content-Type'] = 'application/json'
-        return response
+        flash("you are now logged out")
+        return redirect('/catalog')
     else:
         response = make_response(json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
@@ -205,11 +212,10 @@ def catalogsJSON():
 def showCatalogs():
     catalogs = session.query(Catalog).order_by(asc(Catalog.name))
     items = session.query(SportItem).all()
-
-    # if 'username' not in login_session:
-    #     return render_template('publiccatalogs.html', catalogs=catalogs)
-    # else:
-    return render_template('catalogs.html', catalogs=catalogs, items=items)
+    if 'username' not in login_session:
+        return render_template('viewonlycatalogs.html', catalogs=catalogs, items=items)
+    else:
+        return render_template('catalogs.html', catalogs=catalogs, items=items)
 
 
 # Add a new sport
@@ -272,8 +278,10 @@ def showItem(catalog_id):
         catalog_id=catalog_id).all()
     numOfItems = len(items)
     catalogs = session.query(Catalog).order_by(asc(Catalog.name))
-
-    return render_template('sport.html', items=items, catalogs=catalogs, catalog=catalog, numOfItems=numOfItems)
+    if 'username' not in login_session:
+        return render_template('viewOnlySport.html', items=items, catalogs=catalogs, catalog=catalog, numOfItems=numOfItems)
+    else:
+        return render_template('sport.html', items=items, catalogs=catalogs, catalog=catalog, numOfItems=numOfItems)
 
 
 # Show a sport item description
@@ -281,8 +289,10 @@ def showItem(catalog_id):
 def showSportItem(catalog_id, sport_id):
     displayedItem = session.query(SportItem).filter_by(id=sport_id).one()
     catalog = session.query(Catalog).filter_by(id=catalog_id).one()
-
-    return render_template('sportItem.html', catalog=catalog, sport_id=sport_id, item=displayedItem)
+    if 'username' not in login_session:
+        return render_template('viewonlysportItem.html', catalog=catalog, sport_id=sport_id, item=displayedItem)
+    else:
+        return render_template('sportItem.html', catalog=catalog, sport_id=sport_id, item=displayedItem)
 
 
 # Create a new sport item
