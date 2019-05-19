@@ -3,61 +3,58 @@
 {% include "header.html" %}
 
 
-		<div class="container">
+<div class="container">
 
-		   <p>Click on a category to see the items for it. Resize the browser window to see the effect.</p>
-		   <p>The columns will automatically stack on top of each other when the screen is less than 768px wide.</p>
-
-		  <div class="row">
-		    <div class="col-sm-4">
-		     <h2>Categories</h2>
-				 	<a href='{{url_for('newCatalog') }}'>Add New Catalog</a>
-						{% for catalog in catalogs %}
-							<a href = "{{url_for('showItem', catalog_id = catalog.id)}}">
-										<div class="col-md-10 catalog-list">
-											<p>{{catalog.name}}</p>
-										</div>
-							</a>
-						{% endfor %}
-					</div>
-
-
-					<h2>{{catalog.name}} items ({{numOfItems}})</h2>
-					<a href='{{url_for('newSportItem', catalog_id = catalog.id) }}'>Add New {{catalog.name}} item</a>
-					  {% for i in items %}
-						<a href = "{{url_for('showSportItem', catalog_id=catalog.id, sport_id=i.id)}}">
-
-						   <div class="col-sm-8 catalog-list">
-							   <p>{{i.name}} </p>
-
-							 </div>
-							</a>
-					  {% endfor %}
+	<div class="row">
+		<div class="col-sm-4">
+			<h2>Categories</h2>
+			<a href='{{url_for('newCatalog') }}'>Add New Catalog</a>
+			{% for catalog in catalogs %}
+			<a href="{{url_for('showItem', catalog_id = catalog.id)}}">
+				<div class="col-md-10 catalog-list">
+					<p>{{catalog.name}}</p>
+				</div>
+			</a>
+			{% endfor %}
 		</div>
- </div>
 
 
-		<footer class="container-fluid">
-		  <p>Footer Text</p>
-		</footer>
+		<h2>{{catalog.name}} items ({{numOfItems}})</h2>
+		<a href='{{url_for('newSportItem', catalog_id = catalog.id) }}'>Add New {{catalog.name}} item</a>
+		{% for i in items %}
+		<a href="{{url_for('showSportItem', catalog_id=catalog.id, sport_id=i.id)}}">
 
-		</body>
+			<div class="col-sm-8 catalog-list">
+				<p>{{i.name}} </p>
+
+			</div>
+		</a>
+		{% endfor %}
+	</div>
+</div>
+
+
+<footer class="container-fluid">
+	<p>Footer Text</p>
+</footer>
+
+</body>
 
 
 
-		<div class = 'flash'>
-				  {% with messages = get_flashed_messages() %}
-		      {% if messages %}
-		        <ul>
-		        {% for message in messages %}
-		            <li> <strong> {{ message }} </strong> </li>
-		        {% endfor %}
-		        </ul>
-		      {% endif %}
-		    {% endwith %}
+<div class='flash'>
+	{% with messages = get_flashed_messages() %}
+	{% if messages %}
+	<ul>
+		{% for message in messages %}
+		<li> <strong> {{ message }} </strong> </li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+	{% endwith %}
 
 </div>
-	{% endblock %}
+{% endblock %}
 
 
 

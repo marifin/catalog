@@ -8,13 +8,10 @@
   <div class="row">
     <div class="col-sm-4">
       <h2>Categories</h2>
-      <a href='{{url_for('newCatalog') }}'>Add New Catalog</a>
       {% for catalog in catalogs %}
       <a href="{{url_for('showItem', catalog_id = catalog.id)}}">
-        <div class="row">
-          <div class="col-md-10 catalog-list">
-            <p>{{catalog.name}}</p>
-          </div>
+        <div class="col-md-10 catalog-list">
+          <p>{{catalog.name}}</p>
         </div>
       </a>
       {% endfor %}

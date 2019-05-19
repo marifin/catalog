@@ -1,0 +1,19 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+
+{% if items !=[] %}
+<div class="row">
+  <div class="col-md-6">
+
+    <div class="sport-item">
+      <h3>{{item.name}}</h3>
+      <p>{{item.description}}</p>
+    </div>
+  </div>
+
+  {% endif %}
+
+
+  {% endblock %}
