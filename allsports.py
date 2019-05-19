@@ -21,7 +21,7 @@ session = DBSession()
 
 # Create dummy user
 User1 = User(name="Captain Marvel", email="iza@thisisatest.com",
-             picture='https://pbs.twimg.com/profile_images/2671170543/18debd694829ed78203a5a36dd364160_400x400.png')
+             picture='')
 session.add(User1)
 session.commit()
 
@@ -31,21 +31,27 @@ catalog1 = Catalog(user_id=1, name="Soccer")
 session.add(catalog1)
 session.commit()
 
-sportItem2 = SportItem(user_id=1, name="Ball", description="This brand of soccer ball was used in the last world cup.",
-                     price="$15.50", catalog=catalog1)
+sportItem2 = SportItem(user_id=1, name="Ball",
+                       description="This brand of soccer ball \
+                                   was used in the last world cup.",
+                       catalog=catalog1)
 
 session.add(sportItem2)
 session.commit()
 
 
-sportItem1 = SportItem(user_id=1, name="Goal net", description="FIFA standard size goal with net and posts",
-                     price="$49.99", catalog=catalog1)
+sportItem1 = SportItem(user_id=1, name="Goal net",
+                       description="FIFA standard size goal with \
+                                    net and posts",
+                       catalog=catalog1)
 
 session.add(sportItem1)
 session.commit()
 
-sportItem2 = SportItem(user_id=1, name="Rebounder", description="Soccer ball will bounce right back to you.",
-                     price="$69.50", catalog=catalog1)
+sportItem2 = SportItem(user_id=1, name="Rebounder",
+                       description="Soccer ball will bounce \
+                                    right back to you.",
+                       catalog=catalog1)
 
 session.add(sportItem2)
 session.commit()
@@ -58,39 +64,50 @@ session.add(catalog2)
 session.commit()
 
 
-sportItem1 = SportItem(user_id=1, name="Racquet", description="Perfect racquet for intermediate level players.",
-                     price="$120.99", catalog=catalog2)
+sportItem1 = SportItem(user_id=1, name="Racquet",
+                       description="Perfect racquet for \
+                                   intermediate level players.",
+                       catalog=catalog2)
 
 session.add(sportItem1)
 session.commit()
 
 sportItem2 = SportItem(user_id=1, name="Balls",
-                     description="Green colored felt balls for hard courts. Three per can.",
-                     price="$4.99", catalog=catalog2)
+                       description="Green colored felt balls for hard courts. \
+                                   Three per can.",
+                       catalog=catalog2)
 
 session.add(sportItem2)
 session.commit()
 
-sportItem3 = SportItem(user_id=1, name="Net", description="Wimbledon standard tennis net for hard courts.",
-                     price="$199.00", catalog=catalog2)
+sportItem3 = SportItem(user_id=1, name="Net",
+                       description="Wimbledon standard \
+                                   tennis net for hard courts.",
+                       catalog=catalog2)
 
 session.add(sportItem3)
 session.commit()
 
-sportItem4 = SportItem(user_id=1, name="Shoes ", description="These shoes provide perfect lateral support.",
-                     price="122.00", catalog=catalog2)
+sportItem4 = SportItem(user_id=1, name="Shoes ",
+                       description="These shoes provide \
+                                   perfect lateral support.",
+                       catalog=catalog2)
 
 session.add(sportItem4)
 session.commit()
 
-sportItem5 = SportItem(user_id=1, name="Eye Guard", description="Clear, comfortable glasses for protection on the court.",
-                     price="12.99", catalog=catalog2)
+sportItem5 = SportItem(user_id=1, name="Eye Guard",
+                       description="Clear, comfortable glasses for \
+                                   protection on the court.",
+                       catalog=catalog2)
 
 session.add(sportItem5)
 session.commit()
 
-sportItem6 = SportItem(user_id=1, name="Bag", description="This bag will hold upto 4 racquets and still have room for other items.",
-                     price="44.99", catalog=catalog2)
+sportItem6 = SportItem(user_id=1, name="Bag",
+                       description="This bag will hold upto 4 racquets and \
+                                   still have room for other items.",
+                       catalog=catalog2)
 
 session.add(sportItem6)
 session.commit()
@@ -103,20 +120,25 @@ session.add(catalog1)
 session.commit()
 
 
-sportItem1 = SportItem(user_id=1, name="Board", description="A cool snow board for hitting the slopes.",
-                     price="$230.99", catalog=catalog1)
+sportItem1 = SportItem(user_id=1, name="Board",
+                       description="A cool snow board for hitting the slopes.",
+                       catalog=catalog1)
 
 session.add(sportItem1)
 session.commit()
 
-sportItem2 = SportItem(user_id=1, name="Goggles", description="This goggle provides sun and wind protection for the eyes.",
-                     price="$45.99", catalog=catalog1)
+sportItem2 = SportItem(user_id=1, name="Goggles",
+                       description="This goggle provides sun and \
+                       wind protection for the eyes.",
+                       catalog=catalog1)
 
 session.add(sportItem2)
 session.commit()
 
-sportItem3 = SportItem(user_id=1, name="Helmet", description="Best protection for the head in case of spills.",
-                     price="$55.95", catalog=catalog1)
+sportItem3 = SportItem(user_id=1, name="Helmet",
+                       description="Best protection for the \
+                                   head in case of spills.",
+                       catalog=catalog1)
 
 session.add(sportItem3)
 session.commit()
@@ -129,14 +151,16 @@ session.add(catalog1)
 session.commit()
 
 
-sportItem1 = SportItem(user_id=1, name="Basketball", description="Standard size basketball.",
-                     price="$10.99", catalog=catalog1)
+sportItem1 = SportItem(user_id=1, name="Basketball",
+                       description="Standard size basketball.",
+                       catalog=catalog1)
 
 session.add(sportItem1)
 session.commit()
 
-sportItem2 = SportItem(user_id=1, name="Hoop", description="Basketball hoop with net.",
-                     price="$22.99", catalog=catalog1)
+sportItem2 = SportItem(user_id=1, name="Hoop",
+                       description="Basketball hoop with net.",
+                       catalog=catalog1)
 
 session.add(sportItem2)
 session.commit()
@@ -149,20 +173,23 @@ session.add(catalog1)
 session.commit()
 
 
-sportItem1 = SportItem(user_id=1, name="Bat", description="Baseball bat made of wood.",
-                     price="$78.95", catalog=catalog1)
+sportItem1 = SportItem(user_id=1, name="Bat",
+                       description="Baseball bat made of wood.",
+                       catalog=catalog1)
 
 session.add(sportItem1)
 session.commit()
 
-sportItem2 = SportItem(user_id=1, name="Ball", description="Baseball ball perfect for pitching.",
-                     price="$4.95", catalog=catalog1)
+sportItem2 = SportItem(user_id=1, name="Ball",
+                       description="Baseball ball perfect for pitching.",
+                       catalog=catalog1)
 
 session.add(sportItem2)
 session.commit()
 
-sportItem3 = SportItem(user_id=1, name="Gloves", description="Baseball gloves to catch that ball.",
-                     price="$22.95", catalog=catalog1)
+sportItem3 = SportItem(user_id=1, name="Gloves",
+                       description="Baseball gloves to catch that ball.",
+                       catalog=catalog1)
 
 session.add(sportItem3)
 session.commit()
@@ -175,14 +202,16 @@ session.add(catalog1)
 session.commit()
 
 
-sportItem1 = SportItem(user_id=1, name="Stick", description="Best stick on the ice rink.",
-                     price="$30.95", catalog=catalog1)
+sportItem1 = SportItem(user_id=1, name="Stick",
+                       description="Best stick on the ice rink.",
+                       catalog=catalog1)
 
 session.add(sportItem1)
 session.commit()
 
-sportItem2 = SportItem(user_id=1, name="Puck", description="Great puck for ice hockey.",
-                     price="$7.95", catalog=catalog1)
+sportItem2 = SportItem(user_id=1, name="Puck",
+                       description="Great puck for ice hockey.",
+                       catalog=catalog1)
 
 session.add(sportItem2)
 session.commit()
@@ -195,14 +224,16 @@ session.add(catalog1)
 session.commit()
 
 sportItem9 = SportItem(user_id=1, name="Skates",
-                     description="Skates for the ice.", price="$24.99", catalog=catalog1)
+                       description="Skates for the ice.",
+                       catalog=catalog1)
 
 session.add(sportItem9)
 session.commit()
 
 
-sportItem1 = SportItem(user_id=1, name="Elbow Guards", description="Protection for elbow.",
-                     price="$4.99", catalog=catalog1)
+sportItem1 = SportItem(user_id=1, name="Elbow Guards",
+                       description="Protection for elbow.",
+                       catalog=catalog1)
 
 session.add(sportItem1)
 session.commit()
@@ -216,13 +247,15 @@ session.commit()
 
 
 sportItem1 = SportItem(user_id=1, name="Frisbee",
-                     description="Plastic frisbee", price="$5.95", catalog=catalog1)
+                       description="Plastic frisbee",
+                       catalog=catalog1)
 
 session.add(sportItem1)
 session.commit()
 
-sportItem2 = SportItem(user_id=1, name="T Shirt", description="White tshirt. ",
-                     price="$7.99", catalog=catalog1)
+sportItem2 = SportItem(user_id=1, name="T Shirt",
+                       description="White tshirt. ",
+                       catalog=catalog1)
 
 session.add(sportItem2)
 session.commit()
