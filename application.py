@@ -160,7 +160,7 @@ def gdisconnect():
         return redirect('/catalog')
     else:
         response = make_response(json.dumps('Failed to revoke token \
-                                             for given user.', 400))
+                                            for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -184,14 +184,14 @@ def getUserID(email):
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
-
+    except BaseException:
+        return None
 
 # JSON APIs to view Catalog Information
 @app.route('/catalog/<int:catalog_id>/sport/JSON')
 def catalogSportJSON(catalog_id):
     catalog = session.query(Catalog).filter_by(id=catalog_id).one()
-    items = session.query(SportItem).filter_by(
-        catalog_id=catalog_id).all()
+    items = session.query(SportItem).filter_by(catalog_id=catalog_id).all()
     return jsonify(SportItems=[i.serialize for i in items])
 
 
@@ -230,7 +230,8 @@ def newCatalog():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newCatalog = Catalog(name=request.form['name'])
+        newCatalog = Catalog(name=request.form['name'],
+                             user_id=login_session['user_id'])
         session.add(newCatalog)
         flash('A new catalog %s was created successfully' % newCatalog.name)
         session.commit()
@@ -262,7 +263,10 @@ def deleteCatalog(catalog_id):
     if 'username' not in login_session:
         return redirect('/login')
     catalogToDelete = session.query(Catalog).filter_by(id=catalog_id).one()
-
+    if catalogToDelete.user_id != login_session['user_id']:
+        flash('You are not authorized to edit this catalog.\
+              You can only edit a catalog that you created.', 4000)
+        return redirect('/catalog')
     if request.method == 'POST':
         session.delete(catalogToDelete)
         session.commit()
@@ -274,7 +278,6 @@ def deleteCatalog(catalog_id):
 
 
 # Show a category's items
-
 @app.route('/catalog/<int:catalog_id>/')
 @app.route('/catalog/<int:catalog_id>/sport/')
 def showItem(catalog_id):
@@ -329,7 +332,9 @@ def newSportItem(catalog_id):
     if request.method == 'POST':
         newItem = SportItem(name=request.form['name'],
                             description=request.form['description'],
-                            catalog_id=catalog_id)
+                            catalog_id=catalog_id,
+                            user_id=login_session['user_id']
+                            )
         session.add(newItem)
         session.commit()
         message = flash('New %s Item Created Successfully' % (newItem.name))
@@ -345,12 +350,20 @@ def newSportItem(catalog_id):
 @app.route('/catalog/<int:catalog_id>/sport/<int:sport_id>/edit',
            methods=['GET', 'POST'])
 def editSportItem(catalog_id, sport_id):
-    if 'username' not in login_session:
-        return redirect('/login')
-    editedItem = session.query(SportItem).filter_by(id=sport_id).one()
     catalog = session.query(Catalog).filter_by(id=catalog_id).one()
     username = login_session['username']
     picture = login_session['picture']
+
+    if 'username' not in login_session:
+        return redirect('/login')
+
+    # Check if user is original creator of item
+    editedItem = session.query(SportItem).filter_by(id=sport_id).first()
+    if editedItem.user_id != login_session['user_id']:
+        flash('You are not authorized to edit this item.\
+              You can only edit an item that you created.', 4000)
+        return redirect('/catalog')
+
     if request.method == 'POST':
         if request.form['name']:
             editedItem.name = request.form['name']
@@ -377,6 +390,10 @@ def deleteSportItem(catalog_id, sport_id):
     itemToDelete = session.query(SportItem).filter_by(id=sport_id).one()
     username = login_session['username']
     picture = login_session['picture']
+    if itemToDelete.user_id != login_session['user_id']:
+        flash('You are not authorized to delete this item.\
+              You can only delete an item that you created.', 4000)
+        return redirect('/catalog')
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
