@@ -249,8 +249,11 @@ def newCatalog():
 def editCatalog(catalog_id):
     if 'username' not in login_session:
         return redirect('/login')
-    editedCatalog = session.query(
-        Catalog).filter_by(id=catalog_id).one()
+    editedCatalog = session.query(Catalog).filter_by(id=catalog_id).one()
+    if editedCatalog.user_id != login_session['user_id']:
+        flash('You are not authorized to edit this catalog.\
+              You can only edit the catalog that you created.', 4000)
+        return redirect('/catalog')
     if request.method == 'POST':
         if request.form['name']:
             editedCatalog.name = request.form['name']
