@@ -187,6 +187,7 @@ def getUserID(email):
     except BaseException:
         return None
 
+
 # JSON APIs to view Catalog Information
 @app.route('/catalog/<int:catalog_id>/sport/JSON')
 def catalogSportJSON(catalog_id):
