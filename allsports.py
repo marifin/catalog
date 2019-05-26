@@ -3,29 +3,34 @@ from sqlalchemy.orm import sessionmaker
 
 from database_setup import Catalog, Base, SportItem, User
 
+import logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
 engine = create_engine('sqlite:///itemcatalog.db')
-# Bind the engine to the metadata of the Base class so that the
-# declaratives can be accessed through a DBSession instance
+""" Bind the engine to the metadata of the Base class so that the
+ declaratives can be accessed through a DBSession instance."""
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
-# A DBSession() instance establishes all conversations with the database
-# and represents a "staging zone" for all the objects loaded into the
-# database session object. Any change made against the objects in the
-# session won't be persisted into the database until you call
-# session.commit(). If you're not happy about the changes, you can
-# revert all of them back to the last commit by calling
-# session.rollback()
+""" A DBSession() instance establishes all conversations with the database
+ and represents a "staging zone" for all the objects loaded into the
+ database session object.
+
+ Any change made against the objects in the
+ session won't be persisted into the database until you call
+ session.commit(). If you're not happy about the changes, you can
+ revert all of them back to the last commit by calling
+ session.rollback()."""
 session = DBSession()
 
 
-# Create dummy user
+""" Create dummy user."""
 User1 = User(name="Captain Marvel", email="iza@thisisatest.com",
              picture='')
 session.add(User1)
 session.commit()
 
-# Sport items for Soccer
+""" Sport items for Soccer."""
 catalog1 = Catalog(user_id=1, name="Soccer")
 
 session.add(catalog1)
@@ -57,7 +62,7 @@ session.add(sportItem2)
 session.commit()
 
 
-# Sport items for Tennis
+""" Sport items for Tennis."""
 catalog2 = Catalog(user_id=1, name="Tennis")
 
 session.add(catalog2)
@@ -113,7 +118,7 @@ session.add(sportItem6)
 session.commit()
 
 
-# Sport items for snow boarding
+""" Sport items for snow boarding."""
 catalog1 = Catalog(user_id=1, name="Snow Boarding")
 
 session.add(catalog1)
@@ -144,7 +149,7 @@ session.add(sportItem3)
 session.commit()
 
 
-# Sport items for Basketball
+""" Sport items for Basketball."""
 catalog1 = Catalog(user_id=1, name="Basketball")
 
 session.add(catalog1)
@@ -166,7 +171,7 @@ session.add(sportItem2)
 session.commit()
 
 
-# Sport items for Baseball
+""" Sport items for Baseball."""
 catalog1 = Catalog(user_id=1, name="Baseball")
 
 session.add(catalog1)
@@ -195,7 +200,7 @@ session.add(sportItem3)
 session.commit()
 
 
-# Sport items for Hockey
+""" Sport items for Hockey."""
 catalog1 = Catalog(user_id=1, name="Hockey")
 
 session.add(catalog1)
@@ -217,7 +222,7 @@ session.add(sportItem2)
 session.commit()
 
 
-# Sport items for Skating
+""" Sport items for Skating."""
 catalog1 = Catalog(user_id=1, name="Skating")
 
 session.add(catalog1)
@@ -239,7 +244,7 @@ session.add(sportItem1)
 session.commit()
 
 
-# Sport items for Frisbee
+""" Sport items for Frisbee."""
 catalog1 = Catalog(user_id=1, name="Frisbee")
 
 session.add(catalog1)
@@ -261,4 +266,4 @@ session.add(sportItem2)
 session.commit()
 
 
-print "added sport items!"
+logging.debug('added sport items!')
