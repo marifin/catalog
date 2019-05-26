@@ -14,6 +14,8 @@ import json
 from flask import make_response
 import requests
 
+import logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
 
@@ -22,7 +24,7 @@ CLIENT_ID = json.loads(
 APPLICATION_NAME = "Sports Catalog Application"
 
 
-# Connect to Database and create database session.
+""" Connect to Database and create database session."""
 engine = create_engine('sqlite:///itemcatalog.db')
 Base.metadata.bind = engine
 
@@ -30,10 +32,11 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-# Create anti-forgery unique session token called state, to prevent
-# anti-forgery request attacks.
+
 @app.route('/login')
 def showLogin():
+    """ Create anti-forgery unique session token called state, to prevent
+     anti-forgery request attacks."""
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
@@ -42,16 +45,16 @@ def showLogin():
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-    # Validate state token
+    """ Validate state token."""
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    # Obtain authorization code
+    """ Obtain authorization code."""
     code = request.data
 
     try:
-        # Upgrade the authorization code into a credentials object
+        """ Upgrade the authorization code into a credentials object."""
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
@@ -61,19 +64,19 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    # Check that the access token is valid.
+    """ Check that the access token is valid."""
     access_token = credentials.access_token
     url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
            % access_token)
     h = httplib2.Http()
     result = json.loads(h.request(url, 'GET')[1])
-    # If there was an error in the access token info, abort.
+    """ If there was an error in the access token info, abort."""
     if result.get('error') is not None:
         response = make_response(json.dumps(result.get('error')), 500)
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    # Verify that the access token is used for the intended user.
+    """ Verify that the access token is used for the intended user."""
     gplus_id = credentials.id_token['sub']
     if result['user_id'] != gplus_id:
         response = make_response(
@@ -81,11 +84,11 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    # Verify that the access token is valid for this app.
+    """ Verify that the access token is valid for this app."""
     if result['issued_to'] != CLIENT_ID:
         response = make_response(
             json.dumps("Token's client ID does not match app's."), 401)
-        print "Token's client ID does not match app's."
+        logging.debug("Token's client ID does not match app's.")
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -97,11 +100,11 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    # Store the access token in the session for later use.
+    """ Store the access token in the session for later use."""
     login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
-    # Get user info
+    """ Get user info."""
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
@@ -112,13 +115,13 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
-    # if user does not exist, create one
+    """ if user does not exist, create one."""
     user_id = getUserID(data["email"])
     if not user_id:
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
 
-    print getUserID(data["email"])
+    logging.debug(getUserID(data["email"]))
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -129,13 +132,13 @@ def gconnect():
                           -webkit-border-radius: 150px;\
                           -moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
-    print "done!"
+    logging.debug('done!')
     return output
 
 
 @app.route('/gdisconnect')
 def gdisconnect():
-    # Only disconnect a connected user.
+    """ Only disconnect a connected user."""
     access_token = login_session.get('access_token')
     if access_token is None:
         response = make_response(
@@ -145,7 +148,7 @@ def gdisconnect():
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-    print result
+    logging.debug(result)
 
     if result['status'] == '200':
         del login_session['access_token']
@@ -165,7 +168,7 @@ def gdisconnect():
         return response
 
 
-# User Helper Functions
+""" User Helper Functions."""
 def createUser(login_session):
     newUser = User(name=login_session['username'], email=login_session[
                    'email'], picture=login_session['picture'])
@@ -188,7 +191,7 @@ def getUserID(email):
         return None
 
 
-# JSON APIs to view Catalog Information
+""" JSON APIs to view Catalog Information."""
 @app.route('/catalog/<int:catalog_id>/sport/JSON')
 def catalogSportJSON(catalog_id):
     catalog = session.query(Catalog).filter_by(id=catalog_id).one()
@@ -208,7 +211,7 @@ def catalogsJSON():
     return jsonify(catalogs=[c.serialize for c in catalogs])
 
 
-# Show all catalog sports
+""" Show all catalog sports."""
 @app.route('/')
 @app.route('/catalog/')
 def showCatalogs():
@@ -225,7 +228,7 @@ def showCatalogs():
                                picture=picture, catalogs=catalogs, items=items)
 
 
-# Add a new sport
+""" Add a new sport."""
 @app.route('/catalog/new/', methods=['GET', 'POST'])
 def newCatalog():
     if 'username' not in login_session:
@@ -241,8 +244,7 @@ def newCatalog():
         return render_template('newCatalog.html')
 
 
-# Edit a catalog
-
+""" Edit a catalog."""
 @app.route('/catalog/<int:catalog_id>/edit/', methods=['GET', 'POST'])
 def editCatalog(catalog_id):
     if 'username' not in login_session:
@@ -258,7 +260,7 @@ def editCatalog(catalog_id):
         return render_template('editCatalog.html', catalog=editedCatalog)
 
 
-# Delete a catalog
+""" Delete a catalog"""
 @app.route('/catalog/<int:catalog_id>/delete/', methods=['GET', 'POST'])
 def deleteCatalog(catalog_id):
     if 'username' not in login_session:
@@ -278,7 +280,7 @@ def deleteCatalog(catalog_id):
         return render_template('deleteCatalog.html', catalog=catalogToDelete)
 
 
-# Show a category's items
+""" Show a category's items."""
 @app.route('/catalog/<int:catalog_id>/')
 @app.route('/catalog/<int:catalog_id>/sport/')
 def showItem(catalog_id):
@@ -301,7 +303,7 @@ def showItem(catalog_id):
                                numOfItems=numOfItems)
 
 
-# Show a sport item description
+""" Show a sport item description."""
 @app.route('/catalog/<int:catalog_id>/sport/<int:sport_id>/',
            methods=['GET', 'POST'])
 def showSportItem(catalog_id, sport_id):
@@ -321,9 +323,9 @@ def showSportItem(catalog_id, sport_id):
                                sport_id=sport_id, item=displayedItem)
 
 
-# Create a new sport item
 @app.route('/catalog/<int:catalog_id>/sport/new/', methods=['GET', 'POST'])
 def newSportItem(catalog_id):
+    """ Create a new sport item."""
     if 'username' not in login_session:
         return redirect('/login')
 
@@ -347,10 +349,11 @@ def newSportItem(catalog_id):
                                username=username, catalog=catalog)
 
 
-# Edit a sport item
+
 @app.route('/catalog/<int:catalog_id>/sport/<int:sport_id>/edit',
            methods=['GET', 'POST'])
 def editSportItem(catalog_id, sport_id):
+    """ Edit a sport item."""
     catalog = session.query(Catalog).filter_by(id=catalog_id).one()
     username = login_session['username']
     picture = login_session['picture']
@@ -358,7 +361,7 @@ def editSportItem(catalog_id, sport_id):
     if 'username' not in login_session:
         return redirect('/login')
 
-    # Check if user is original creator of item
+    """ Check if user is original creator of item."""
     editedItem = session.query(SportItem).filter_by(id=sport_id).first()
     if editedItem.user_id != login_session['user_id']:
         flash('You are not authorized to edit this item.\
@@ -381,10 +384,10 @@ def editSportItem(catalog_id, sport_id):
                                sport_id=sport_id, item=editedItem)
 
 
-# Delete a sport item
 @app.route('/catalog/<int:catalog_id>/sport/<int:sport_id>/delete',
            methods=['GET', 'POST'])
 def deleteSportItem(catalog_id, sport_id):
+    """Delete a sport item."""
     if 'username' not in login_session:
         return redirect('/login')
     catalog = session.query(Catalog).filter_by(id=catalog_id).one()
